@@ -1,0 +1,77 @@
+version: 1
+
+# How CodeRabbit should behave
+reviews:
+  profile: "chill"          # chill | strict
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+
+  # Focus areas for this repo
+  focus:
+    - "rego policy correctness"
+    - "opa test coverage"
+    - "bundle layout & manifest"
+    - "security & least privilege"
+    - "breaking changes for decision APIs (data.<pkg>.*)"
+
+  # Files to prioritize
+  path_filters:
+    include:
+      - "**/*.rego"
+      - "bundle/**"
+      - "policies/**"
+      - "tests/**"
+      - ".github/workflows/**"
+      - ".buildkite/**"
+      - "README.md"
+    exclude:
+      - "**/*.png"
+      - "**/*.jpg"
+      - "**/*.svg"
+      - "**/*.lock"
+      - "**/vendor/**"
+
+  # Enforce that PRs touching policies also touch tests
+  rules:
+    - name: "Policies must have tests"
+      when:
+        any_changed:
+          - "**/*.rego"
+      require:
+        any_changed:
+          - "**/*_test.rego"
+          - "**/tests/**"
+      message: >
+        This PR changes Rego policies. Please add/adjust OPA unit tests
+        (e.g., *_test.rego) to cover the new/changed behavior.
+
+    - name: "Decision API stability"
+      when:
+        any_changed:
+          - "**/*.rego"
+      remind: >
+        If you changed package names or entrypoints, confirm downstream callers
+        (e.g., data.dnscontrol.deny) won’t break, or provide a migration note.
+
+# Static instructions that shape every review
+system_prompt: |
+  You are reviewing an Open Policy Agent (OPA) Rego policy repository.
+
+  Review goals:
+  - Correctness: policy logic should match intent; avoid unintended allow/deny.
+  - Safety: highlight potential bypasses, overly-broad allow rules, missing default deny.
+  - Determinism: policies must be deterministic and avoid time-based flakiness.
+  - Test quality: require unit tests for new/changed rules; prefer table-driven tests.
+  - Style: idiomatic Rego, clear packages, meaningful rule names, comments where needed.
+  - Performance: avoid expensive comprehensions; suggest indexing patterns where helpful.
+  - Bundle integrity: ensure bundle layout and manifest are valid for OPA bundle usage.
+
+  Rego best practices to enforce:
+  - Prefer default deny (or deny set) patterns.
+  - Avoid ambiguous truthy/falsey outputs.
+  - Keep entrypoints stable: document data.<pkg>.<decision>.
+  - Use `with input as ...` in tests; avoid shared global state.
+  - Ensure tests assert both allow and deny scenarios and edge cases.
+
+  When you suggest changes
