@@ -1,0 +1,68 @@
+# -------------------------------------------------
+# DNSControl
+# -------------------------------------------------
+
+# Local credentials (never commit)
+creds.json
+creds.yaml
+creds.yml
+credentials.json
+.env
+.env.*
+
+# Preview / diff outputs
+preview.json
+preview.txt
+dnscontrol-preview.*
+*.diff
+
+# Temporary execution artifacts
+dnscontrol.out
+dnscontrol.err
+
+# -------------------------------------------------
+# Providers / tooling caches
+# -------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# -------------------------------------------------
+# PowerShell / Windows
+# -------------------------------------------------
+*.ps1.user
+*.psm1.user
+*.psd1.user
+
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# -------------------------------------------------
+# Lefthook
+# -------------------------------------------------
+.lefthook/
+.lefthook-local/
+
+# -------------------------------------------------
+# CI / tooling
+# -------------------------------------------------
+.teamcity/
+coverage/
+*.log
+
+# -------------------------------------------------
+# Editors / IDEs
+# -------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# -------------------------------------------------
+# OS / temp
+# -------------------------------------------------
+.DS_Store
+*.tmp
+*.bak
+*.old
